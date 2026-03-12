@@ -2,6 +2,7 @@ package tech.samagua.spring_security_b010701.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authorization.AuthorityAuthorizationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -48,7 +49,8 @@ public class ProjectConfig {
                 c -> c.anyRequest()
                         //.hasAuthority("WRITE")
                         //.hasAnyAuthority("WRITE")
-                        .hasAnyAuthority("WRITE", "READ")
+                        //.hasAnyAuthority("WRITE", "READ")
+                        .access(AuthorityAuthorizationManager.hasAuthority("WRITE"))
         );
 
         return http.build();
