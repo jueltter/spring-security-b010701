@@ -2,7 +2,6 @@ package tech.samagua.spring_security_b010701.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authorization.AuthorityAuthorizationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -11,6 +10,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 
 @Configuration
 public class ProjectConfig {
@@ -21,12 +21,12 @@ public class ProjectConfig {
 
         var user1 = User.withUsername("john")
                 .password("12345")
-                .authorities("READ")
+                .authorities("read")
                 .build();
 
         var user2 = User.withUsername("jane")
                 .password("12345")
-                .authorities("WRITE")
+                .authorities("read", "write", "delete")
                 .build();
 
         manager.createUser(user1);
@@ -50,7 +50,7 @@ public class ProjectConfig {
                         //.hasAuthority("WRITE")
                         //.hasAnyAuthority("WRITE")
                         //.hasAnyAuthority("WRITE", "READ")
-                        .access(AuthorityAuthorizationManager.hasAuthority("WRITE"))
+                        .access(new WebExpressionAuthorizationManager("hasAuthority('write')"))
         );
 
         return http.build();
